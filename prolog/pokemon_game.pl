@@ -5,41 +5,39 @@
 player_starts(0,0).
 
 % TO DO-Feito
-next_rooms(X, Y, Rooms) :-
-    route(M),
-    findall(Room, obter_room(X, Y, M, Room), Rooms).
-
-elemento_zero(0, [X|_], X).
-elemento_zero(N, [_|T], Y) :- 
-    M is N-1, 
-    elemento_zero(M, T, Y).
-
-% 2. Como verificar as 4 direções e não sair do mapa
-% Direita
-vizinho_valido(X, Y, M, NextX, NextY, Id, Level) :-
-    NextX is X + 1, NextY is Y,
-    elemento_zero(NextY, M, Linha),
-    elemento_zero(NextX, Linha, (Id, Level)).
+get_element(0, [X|_], X).
+get_element(N, [_|T], Y) :-
+    M is N-1,
+    get_element(M, T, Y).
 
 % Esquerda
-vizinho_valido(X, Y, M, NextX, NextY, Id, Level) :-
+valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
     NextX is X - 1, NextY is Y,
-    elemento_zero(NextY, M, Linha),
-    elemento_zero(NextX, Linha, (Id, Level)).
+    get_element(NextY, M, Row),
+    get_element(NextX, Row, (Id, Level)).
+
+% Direita
+valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
+    NextX is X + 1, NextY is Y,
+    get_element(NextY, M, Row),
+    get_element(NextX, Row, (Id, Level)).
 
 % Baixo
-vizinho_valido(X, Y, M, NextX, NextY, Id, Level) :-
-    NextX is X, NextY is Y + 1,
-    elemento_zero(NextY, M, Linha),
-    elemento_zero(NextX, Linha, (Id, Level)).
+valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
+    NextX is X, NextY is Y+1,
+    get_element(NextY, M, Row),
+    get_element(NextX, Row, (Id, Level)).
 
 % Cima
-vizinho_valido(X, Y, M, NextX, NextY, Id, Level) :-
-    NextX is X, NextY is Y - 1,
-    elemento_zero(NextY, M, Linha),
-    elemento_zero(NextX, Linha, (Id, Level)).
+valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
+    NextX is X, NextY is Y-1,
+    get_element(NextY, M, Row),
+    get_element(NextX, Row, (Id, Level)).
 
-% 3. Como juntar os dados do quarto e os dados do Pokémon
-obter_quarto(X, Y, M, [Id, Name, Level, NextX, NextY, Types]) :-
-    vizinho_valido(X, Y, M, NextX, NextY, Id, Level),
+get_room(X, Y, M, [Id, Name, Level, NextX, NextY, Types]) :-
+    valid_neighbor(X, Y, M, NextX, NextY, Id, Level),
     pokemon(Id, Name, Types).
+
+next_rooms(X, Y, Rooms) :-
+    route(M),
+    findall(Room, get_room(X, Y, M, Room), Rooms).
