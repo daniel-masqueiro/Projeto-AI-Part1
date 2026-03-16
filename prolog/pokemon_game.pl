@@ -5,6 +5,8 @@
 player_starts(0,0).
 
 % TO DO-Feito
+
+% obter elemento
 get_element(0, [X|_], X).
 get_element(N, [_|T], Y) :-
     M is N-1,
