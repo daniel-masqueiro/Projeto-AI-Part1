@@ -4,6 +4,7 @@
 
 player_starts(0,0).
 
-% TO DO
-next_rooms(X,Y,Rooms) :-
-    route(M).
+% TO DO-Feito
+next_rooms(X, Y, Rooms) :-
+    route(M),
+    findall(Quarto, obter_quarto(X, Y, M, Quarto), Rooms).
