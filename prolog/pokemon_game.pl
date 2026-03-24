@@ -9,7 +9,7 @@ player_starts(0,0).
 % obter elemento
 get_element(0, [X|_], X).
 get_element(N, [_|T], Y) :-
-    M is N-1,
+    M is N - 1,
     get_element(M, T, Y).
 
 % Esquerda
@@ -26,13 +26,13 @@ valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
 
 % Baixo
 valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
-    NextX is X, NextY is Y+1,
+    NextX is X, NextY is Y + 1,
     get_element(NextY, M, Row),
     get_element(NextX, Row, (Id, Level)).
 
 % Cima
 valid_neighbor(X, Y, M, NextX, NextY, Id, Level) :-
-    NextX is X, NextY is Y-1,
+    NextX is X, NextY is Y - 1,
     get_element(NextY, M, Row),
     get_element(NextX, Row, (Id, Level)).
 
