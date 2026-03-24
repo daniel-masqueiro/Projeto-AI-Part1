@@ -4,7 +4,7 @@
 
 player_starts(0,0).
 
-%To do- Feito
+%To Do- Feito
 
 % obter elemento
 get_element(0, [X|_], X).
