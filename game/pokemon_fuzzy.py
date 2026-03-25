@@ -37,10 +37,37 @@ sistema_combate = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, re
 simulacao = ctrl.ControlSystemSimulation(sistema_combate)
 
 def calculate_prob(level_input, effect_input):
-    simulacao.input['level_input'] = level_input
-    simulacao.input['effect_input'] = effect_input
-    simulacao.compute()
-    return simulacao.output['win_prob']
+    global_level_input = globals()['level_input']
+    global_effect_input = globals()['effect_input']
+
+    l_pos = np.where(global_level_input.universe == level_input)[0][0]
+    e_pos = np.where(global_effect_input.universe == effect_input)[0][0]
+
+    l_abaixo = global_level_input['Muito Abaixo'].mf[l_pos]
+    l_eq = global_level_input['Equilibrado'].mf[l_pos]
+    l_alto = global_level_input['Muito Alto'].mf[l_pos]
+
+    e_nao_eficaz = global_effect_input['Não Eficaz'].mf[e_pos]
+    e_neutro = global_effect_input['Neutro'].mf[e_pos]
+    e_eficaz = global_effect_input['Eficaz'].mf[e_pos]
+
+    r1_contrib = np.fmin(min(l_abaixo, e_nao_eficaz), win_prob['Baixa'].mf)
+    r2_contrib = np.fmin(min(l_abaixo, e_neutro), win_prob['Baixa'].mf)
+    r3_contrib = np.fmin(min(l_abaixo, e_eficaz), win_prob['Média'].mf)
+
+    r4_contrib = np.fmin(min(l_eq, e_nao_eficaz), win_prob['Baixa'].mf)
+    r5_contrib = np.fmin(min(l_eq, e_neutro), win_prob['Média'].mf)
+    r6_contrib = np.fmin(min(l_eq, e_eficaz), win_prob['Alta'].mf)
+
+    r7_contrib = np.fmin(min(l_alto, e_nao_eficaz), win_prob['Média'].mf)
+    r8_contrib = np.fmin(min(l_alto, e_neutro), win_prob['Alta'].mf)
+    r9_contrib = np.fmin(min(l_alto, e_eficaz), win_prob['Alta'].mf)
+
+    else_link = np.fmax(r1_contrib,np.fmax(r2_contrib,np.fmax(r3_contrib,np.fmax(r4_contrib,np.fmax(r5_contrib,np.fmax(r6_contrib,np.fmax(r7_contrib,np.fmax(r8_contrib, r9_contrib))))))))
+
+    prob_final = fuzz.defuzz(win_prob.universe, else_link, 'centroid')
+
+    return prob_final
     
 
 

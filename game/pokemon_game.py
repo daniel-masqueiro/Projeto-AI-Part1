@@ -33,12 +33,20 @@ class PokemonGame:
     # --------------------------------
 
     def total_attack(self, attacker_types, defender_types):
+        melhor_efeito = 0
+        for a_type in attacker_types:
+            efeito_combinado = 1
+            for d_type in defender_types:
+                resultado = list(self.prolog.query(f"attack({a_type}, {d_type}, Effect)"))
 
-        # TO DO
+                if resultado:
+                    valor = resultado[0]['Effect']
+                    efeito_combinado *= valor
 
-        return 0
+            if efeito_combinado > melhor_efeito:
+                melhor_efeito = efeito_combinado
 
-    # --------------------------------
+        return melhor_efeito
 
     def evaluate_next_rooms(self, pokemon_level, pos):
 
