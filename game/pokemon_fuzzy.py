@@ -9,9 +9,9 @@ e o efeito do ataque e devolve como input a probabilidade de ganhar
 # TO DO-Feito
 
 level_input = ctrl.Antecedent(np.arange(-10, 11, 1), 'level_input')
-level_input['Muito Abaixo'] = fuzz.trapmf(level_input.universe, [-10, -10, -5, -2])
+level_input['Muito Abaixo'] = fuzz.trapmf(level_input.universe, [-10, -10, -7, -2])
 level_input['Equilibrado']=fuzz.trimf(level_input.universe, [-5,0,5])
-level_input['Muito Alto'] = fuzz.trapmf(level_input.universe, [2, 5, 10, 10])
+level_input['Muito Alto'] = fuzz.trapmf(level_input.universe, [2, 7, 10, 10])
 
 effect_input = ctrl.Antecedent(np.arange(0, 2.1, 0.1), 'effect_input')
 effect_input['Não Eficaz'] = fuzz.trapmf(effect_input.universe, [0, 0, 0.2, 0.5])
